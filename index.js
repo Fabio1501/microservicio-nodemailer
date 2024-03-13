@@ -2,6 +2,9 @@ require('dotenv').config();
 const express = require('express');
 
 const nodemailer = require("nodemailer");
+const fs = require("fs");
+const path = require("path");
+
 const app = express();
 app.use(express.json());
 
@@ -11,34 +14,49 @@ const PASS = process.env.PASS;
 
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
-  port: 587,
-  secure: false, // Use `true` for port 465, `false` for all other ports
+  port: 465,
+  secure: true, // Use `true` for port 465, `false` for all other ports
   auth: {
     user: USER_EMAIL,
     pass: PASS,
   },
 });
 
-app.post('/email', async (req, res) => {
+app.post('/subscribe', async (req, res) => {
   try {
-    const { to, subject, text } = req.body
-    // const info = await transporter.sendMail({
-    //   from: '"Maddison Foo Koch 👻" <fabiuuu8@gmail.com>',
-    //   to: "vallejosabrina47@gmail.com, fabicara56@gmail.com",
-    //   subject: "Hello ✔",
-    //   text: "Hello world?"
-    // });
+    const { to } = req.body
+    const filePath = path.join(__dirname, "./prueba.html");
+    const html = fs.readFileSync(filePath, "utf8");
 
     const info = await transporter.sendMail(
       {
-        from: '"Tu alma gemela 👻" <fabiuuu8@gmail.com>',
+        from: `"Lazos 🌈" <${USER_EMAIL}>`,
+        to,
+        subject: "Suscripción a newsletter.",
+        html
+      }
+    );
+
+    res.send("Email enviado correctamente.");
+  } catch (error) {
+    console.log(error);
+    res.send("No se pudo enviar el email.")
+  }
+});
+
+app.post('/email', async (req, res) => {
+  try {
+    const { to, subject, text } = req.body
+    const info = await transporter.sendMail(
+      {
+        from: `"Lazos 🌈" <${USER_EMAIL}>`,
         to,
         subject,
         text
       }
     );
-
-    res.send(info.messageId);
+    
+    res.send("Email enviado correctamente.");
   } catch (error) {
     console.log(error);
     res.send("No se pudo enviar el email.")
