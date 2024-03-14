@@ -44,15 +44,19 @@ app.post('/subscribe', async (req, res) => {
   }
 });
 
+// {
+//   to: "EMAIL"
+// }
+
 app.post('/email', async (req, res) => {
   try {
-    const { to, subject, text } = req.body
+    const { userEmail, name, subject, text } = req.body
     const info = await transporter.sendMail(
       {
-        from: `"Lazos 🌈" <${USER_EMAIL}>`,
-        to,
+        from: `"${name} ❓" <${USER_EMAIL}>`,
+        to: USER_EMAIL,
         subject,
-        text
+        text: `El usuario con correo ${userEmail}, te envia este mensaje: ${text}`
       }
     );
     
@@ -62,6 +66,13 @@ app.post('/email', async (req, res) => {
     res.send("No se pudo enviar el email.")
   }
 });
+
+// {
+//   "userEmail": "fabicara56@gmail.com",
+//   "subject": "Hola",
+//   "name": "Fabian",
+//   "text": "Prueba de email desde pagina de lazos"
+// }
 
 // Inicia el servidor
 app.listen(PORT, () => {
