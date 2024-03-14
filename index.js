@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
 
 const nodemailer = require("nodemailer");
 const fs = require("fs");
@@ -7,6 +8,9 @@ const path = require("path");
 
 const app = express();
 app.use(express.json());
+app.use(cors({
+  origin: ['https://lazoss.vercel.app', 'http://localhost:5173']
+}));
 
 const PORT = process.env.PORT || 3000;
 const USER_EMAIL = process.env.USER_EMAIL;
