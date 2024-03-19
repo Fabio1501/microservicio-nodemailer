@@ -57,7 +57,7 @@ app.post('/email', async (req, res) => {
     const { userEmail, name, subject, text } = req.body
     const info = await transporter.sendMail(
       {
-        from: `"${name} ❓" <${USER_EMAIL}>`,
+        from: `<${USER_EMAIL}>`,
         to: USER_EMAIL,
         subject,
         text: `El usuario con correo ${userEmail}, te envia este mensaje: ${text}`
